@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const {hash} = require("bcryptjs");
+const sessionSchema = require("./session");
+
+const {hash, compare} = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -19,11 +21,30 @@ const userSchema = new mongoose.Schema({
         required: [true, "A password is required"],
         minlength: [8, "Password must be at least 8 characters"],
         maxlength: [72, "Password must be less than 73 characters"]
+    },
+    session: {
+        type: sessionSchema
     }
 })
 
 userSchema.methods.hashPassword = async function() {
     this.password = await hash(this.password, 10);
+}
+
+userSchema.methods.comparePasswords = function(password) {
+    return compare(password, this.password);
+}
+
+userSchema.methods.createSession = function() {
+    if (!this.session) {
+        this.session = {
+            start: new Date(),
+            lastUpdated: new Date()
+        }
+        return
+    }
+    this.session.start = new Date();
+    this.session.lastUpdated = new Date();
 }
 
 module.exports = mongoose.model("user", userSchema);
