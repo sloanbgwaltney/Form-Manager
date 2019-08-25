@@ -9,7 +9,6 @@ const createUser = async (req, res, next) => {
         await user.save();
         res.sendStatus(200);
     } catch(e) {
-        console.log(e)
         next(e);
     }
 }
