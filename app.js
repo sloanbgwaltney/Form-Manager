@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 
 // -------- Routes Import ------------------
 const usersRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
 // -----------------------------------------
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json())
 //------------------------------------------
 
 // ----------Routers -----------------------
+app.use("/auth", authRouter.router)
 app.use("/users", usersRouter.router)
 // -----------------------------------------
 const port = process.env.PORT || 3000;
