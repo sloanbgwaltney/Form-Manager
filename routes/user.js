@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const injectModel = require("../middleware/injectModel");
+const authRequired = require("../middleware/authRequired");
 
 const createUser = async (req, res, next) => {
     try {
@@ -13,6 +14,21 @@ const createUser = async (req, res, next) => {
     }
 }
 
-router.post("/", injectModel("User", true), createUser);
+const getUser = async (req, res, next) => {
+    res.json(req.user);
+}
 
-module.exports = {router, createUser};
+const deleteUser = async (req, res, next) => {
+    try {
+        await req.user.delete()
+        res.sendStatus(200)
+    } catch (e) {
+        next(e)
+    } 
+}
+
+router.post("/", injectModel("User", true), createUser);
+router.get("/", authRequired, getUser)
+router.delete("/", authRequired, deleteUser)
+
+module.exports = {router, createUser, getUser, deleteUser};
