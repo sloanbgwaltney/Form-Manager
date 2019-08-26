@@ -8,6 +8,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // -----------------------------------------
 
+
+// ---------Custom Middleware Import-------
+const injectModel = require("./middleware/injectModel");
+const sessionParser = require("./middleware/sessionParser");
+// ----------------------------------------
 // -------- Routes Import ------------------
 const usersRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
@@ -16,6 +21,8 @@ const app = express();
 
 // ----------Pre Route Middleware ----------
 app.use(bodyParser.json())
+app.use(injectModel("User"))
+app.use(sessionParser)
 //------------------------------------------
 
 // ----------Routers -----------------------
