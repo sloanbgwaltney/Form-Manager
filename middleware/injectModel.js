@@ -2,8 +2,12 @@ const userModel = require("../models/user");
 const formModel = require("../models/form");
 
 module.exports = (key, construct) => (req, res, next) => {
-    req.models = {}
-    req.construct = {}
+    if (!req.models) {
+        req.models = {}
+    }
+    if (!req.construct) {
+        req.construct = {}
+    }
     switch (key) {
         case "User":
             req.models.user = userModel;
